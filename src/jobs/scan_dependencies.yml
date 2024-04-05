@@ -1,0 +1,37 @@
+description: >
+  Scan production dependencies for critical and high severity vulnerabilities.
+  Uses the "audit" command of the targeted package manager.
+
+executor: core/node
+
+parameters:
+  pkg_manager:
+    type: enum
+    enum: ['npm', 'pnpm']
+    default: 'npm'
+    description: Choose Node.js package manager to use.
+  pkg_json_dir:
+    type: string
+    default: '.'
+    description: >
+      Path to the directory containing package.json file.
+      Not needed when package.json is in the root.
+  scan_command:
+    type: string
+    default: ''
+    description: >
+      Custom command to scan dependencies for vulnerabilities. Useful when default commands,
+      "npm aduit --audit-level=high --omit=dev" or "pnpm audit --audit-level high --prod", are unsuitable.
+
+steps:
+  - checkout
+  - core/install_dependencies:
+      pkg_manager: <<parameters.pkg_manager>>
+      pkg_json_dir: <<parameters.pkg_json_dir>>
+  - run:
+      name: Scan dependencies
+      working_directory: <<parameters.pkg_json_dir>>
+      environment:
+        PKG_MANAGER: <<parameters.pkg_manager>>
+        SCAN_CMD: <<parameters.scan_command>>
+      command: <<include(scripts/scan-dependencies.sh)>>

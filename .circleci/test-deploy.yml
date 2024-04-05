@@ -37,6 +37,23 @@ workflows:
       - command-test:
           filters: *filters
       # The orb must be re-packed for publishing, and saved to the workspace.
+      - security/scan_dependencies:
+          pkg_manager: npm
+          pkg_json_dir: ~/project/sample
+          filters: *filters
+      - security/scan_dependencies:
+          pkg_manager: pnpm
+          pkg_json_dir: ~/project/sample
+          filters: *filters
+      - security/scan_dependencies:
+          pkg_manager: npm
+          pkg_json_dir: ~/project/sample
+          scan_command: |
+            #!/bin/bash
+            if ! npm audit --audit-level=high; then
+              echo "Scan found dependencies with high vulnerability level"
+            fi
+          filters: *filters
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:

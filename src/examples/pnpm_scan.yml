@@ -1,0 +1,14 @@
+description: |
+  By default, the "scan_dependencies" job checks for production dependencies
+  with critical and high severity vulnerabilities.
+  There is an option to override the scan command, package manager, and root directory.
+usage:
+  version: 2.1
+  orbs:
+    security: studion/security@x.y.z
+  workflows:
+    scan_app_dependencies:
+      jobs:
+        - security/scan_dependencies:
+            pkg_json_dir: ~/app
+            scan_command: pnpm audit
