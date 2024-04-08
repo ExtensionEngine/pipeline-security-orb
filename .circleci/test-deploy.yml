@@ -17,14 +17,17 @@ workflows:
   test-deploy:
     jobs:
       - security/scan_dependencies:
+          name: scan_dependencies_npm
           pkg_manager: npm
           pkg_json_dir: ~/project/sample
           filters: *filters
       - security/scan_dependencies:
+          name: scan_dependencies_pnpm
           pkg_manager: pnpm
           pkg_json_dir: ~/project/sample
           filters: *filters
       - security/scan_dependencies:
+          name: scan_dependencies_command
           pkg_manager: npm
           pkg_json_dir: ~/project/sample
           scan_command: |
@@ -41,5 +44,8 @@ workflows:
           pub_type: production
           requires:
             - orb-tools/pack
+            - scan_dependencies_npm
+            - scan_dependencies_pnpm
+            - scan_dependencies_command
           context: orb-publishing
           filters: *release-filters
