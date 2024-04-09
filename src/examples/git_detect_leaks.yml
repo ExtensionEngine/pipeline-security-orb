@@ -1,0 +1,16 @@
+description: |
+  The "detect_secrets_git" job checks for secrets leak inside a Git repository.
+  When a current branch is not a base branch it scans all commits inside the current branch.
+  If the current branch and base branch are the same it scans commits from base revision
+  up to last commit in a build.
+  The base revision should be provided for the most accurate results, while the base branch
+  can be overridden if necessary.
+usage:
+  version: 2.1
+  orbs:
+    security: studion/security@x.y.z
+  workflows:
+    detect_app_leaks:
+      jobs:
+        - security/detect_secrets_git:
+            base_revision: <<pipeline.git.base_revision>>
