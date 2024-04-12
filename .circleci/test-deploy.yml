@@ -36,6 +36,27 @@ workflows:
               echo "Scan found dependencies with high vulnerability level"
             fi
           filters: *filters
+      - security/detect_secrets_dir:
+          name: detect_secrets_dir
+          filters: *filters
+      - security/detect_secrets_git:
+          name: detect_secrets_git_base_revision
+          base_revision: <<pipeline.git.base_revision>>
+          filters: *filters
+      - security/detect_secrets_git:
+          name: detect_secrets_git_same_revision
+          base_branch: <<pipeline.git.branch>>
+          base_revision: <<pipeline.git.revision>>
+          filters: *filters
+      - security/detect_secrets_git:
+          name: detect_secrets_git_invalid_revision
+          base_branch: <<pipeline.git.branch>>
+          base_revision: ec9bf83ad5045208d15f2ec2c0ce4fba8cd7118f
+          filters: *filters
+      - security/detect_secrets_git:
+          name: detect_secrets_git_no_revision
+          base_branch: <<pipeline.git.branch>>
+          filters: *filters
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
@@ -47,5 +68,7 @@ workflows:
             - scan_dependencies_npm
             - scan_dependencies_pnpm
             - scan_dependencies_command
+            - detect_secrets_dir
+            - detect_secrets_git_base_revision
           context: orb-publishing
           filters: *release-filters
