@@ -5,7 +5,7 @@ if [[ -n "$SCAN_CMD" ]]; then
   eval "$SCAN_CMD"
 elif [[ "$PKG_MANAGER" == "npm" ]]; then
   echo "Running npm audit with high audit level omitting dev dependencies"
-  npm audit --aduit-level=high --omit=dev
+  npm audit --audit-level=high --omit=dev
 elif [[ "$PKG_MANAGER" == "pnpm" ]]; then
   echo "Running pnpm audit with high audit level on prod dependencies"
   pnpm audit --audit-level=high --prod
