@@ -21,7 +21,7 @@ parameters:
     default: ''
     description: >
       Custom command to scan dependencies for vulnerabilities. Useful when default commands,
-      "npm aduit --audit-level=high --omit=dev" or "pnpm audit --audit-level high --prod", are unsuitable.
+      "npm audit --audit-level=high --omit=dev" or "pnpm audit --audit-level high --prod", are unsuitable.
 
 steps:
   - checkout
