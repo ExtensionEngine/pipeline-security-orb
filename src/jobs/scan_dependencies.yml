@@ -28,6 +28,10 @@ parameters:
 
 steps:
   - checkout
+  - run:
+      name: Check lockfile
+      working_directory: <<parameters.pkg_json_dir>>
+      command: <<include(scripts/check-lockfile.sh)>>
   - core/ensure_pkg_manager:
       ref: <<parameters.pkg_manager>>
   - run:
