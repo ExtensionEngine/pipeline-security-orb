@@ -1,0 +1,45 @@
+description: >
+  Run static analysis, or SAST, to find vulnerabilities in the codebase. Utilizes the Semgrep "scan"
+  command to do the analysis, for details hot it works see https://semgrep.dev/docs/cli-reference.
+
+executor: semgrep
+
+parameters:
+  path:
+    type: string
+    default: '.'
+    description: The path to the directory to scan.
+  full_scan:
+    type: boolean
+    default: false
+    description: >
+      The flag indicating whether to scan the full directory vs just files changed from the last commit,
+      or the whole branch if it is a short-lived branch, i.e. pull request.
+  verbose:
+    type: boolean
+    default: false
+    description: The flag indicates whether to show more details about rules, files, etc.
+  rules:
+    type: string
+    default: p/default p/owasp-top-ten p/r2c-security-audit p/eslint
+    description: >
+      The space-separated list of Semgrep rules, e.g. YAML configuration file, URL of the configuration
+      file, or Semgrep registry entry name.
+  base_branch:
+    type: string
+    default: ''
+    description: >
+      The name of the base branch for this scan. Usually some long-lived branch, e.g. default branch.
+
+steps:
+  - checkout
+  - run:
+      name: Analyze code
+      working_directory: <<parameters.path>>
+      environment:
+        DIR_PATH: <<parameters.path>>
+        FULL_SCAN: <<parameters.full_scan>>
+        VERBOSE: <<parameters.verbose>>
+        RULES: <<parameters.rules>>
+        BASE_BRANCH_OVERRIDE: <<parameters.base_branch>>
+      command: <<include(scripts/analyze-code.sh)>>

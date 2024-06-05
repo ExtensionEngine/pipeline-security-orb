@@ -57,6 +57,15 @@ workflows:
           name: detect_secrets_git_no_revision
           base_branch: <<pipeline.git.branch>>
           filters: *filters
+      - security/analyze_code:
+          name: analyze_code_diff
+          path: ~/project/sample
+          filters: *filters
+      - security/analyze_code:
+          name: analyze_code_full
+          full_scan: true
+          rules: p/cwe-top-25
+          filters: *filters
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
@@ -70,5 +79,7 @@ workflows:
             - scan_dependencies_command
             - detect_secrets_dir
             - detect_secrets_git_base_revision
+            - analyze_code_diff
+            - analyze_code_full
           context: orb-publishing
           filters: *release-filters
