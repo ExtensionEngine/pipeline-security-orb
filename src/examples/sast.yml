@@ -1,0 +1,17 @@
+description: |
+  The "analyze_code" job runs a static analysis tool to scan the codebase for vulnerabilities.
+  By default, a diff-aware scanning is performed meaning only file changes in the last commit
+  are scanned, or files scoped to the pull request if a short-lived branch is in question.
+  There is an option to scan all files inside a repository, change a base branch,
+  and enforce a different set of scan rules.
+usage:
+  version: 2.1
+  orbs:
+    security: studion/security@x.y.z
+  workflows:
+    test_codebase:
+      jobs:
+        - security/analyze_code:
+            path: ~/workspace
+            full_scan: true
+            base_branch: prod

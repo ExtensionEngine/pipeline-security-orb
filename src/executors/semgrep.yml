@@ -1,0 +1,19 @@
+description: >
+  A Docker executor using official Semgrep image based on Alpine Linux.
+
+parameters:
+  tag:
+    type: string
+    default: latest
+    description: >
+      Choose a specific semgrep/semgrep image tag:
+      https://hub.docker.com/r/semgrep/semgrep/tags
+  resource_class:
+    type: enum
+    enum: ['small', 'medium', 'medium+', 'large', 'xlarge', '2xlarge', '2xlarge+']
+    default: 'medium'
+    description: Choose the executor resource class
+
+docker:
+  - image: semgrep/semgrep:<<parameters.tag>>
+resource_class: <<parameters.resource_class>>
