@@ -17,8 +17,8 @@ parameters:
     type: string
     default: '.'
     description: >
-      Path to the directory containing package.json file.
-      Not needed when package.json is in the root.
+      Path to the directory containing "package.json" file.
+      Not needed when "package.json" is in the root.
   scan_command:
     type: string
     default: ''
@@ -29,7 +29,7 @@ parameters:
 steps:
   - checkout
   - run:
-      name: Check lockfile
+      name: Check the lockfile
       working_directory: <<parameters.pkg_json_dir>>
       command: <<include(scripts/check-lockfile.sh)>>
   - core/ensure_pkg_manager:

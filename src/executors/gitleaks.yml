@@ -1,5 +1,5 @@
 description: >
-  A Docker executor using default Gitleaks image based on Alpine Linux.
+  A Docker executor using the official Gitleaks image based on Alpine Linux.
 
 parameters:
   tag:

@@ -1,6 +1,6 @@
 description: >
   Run static analysis, or SAST, to find vulnerabilities in the codebase. Utilizes the Semgrep "scan"
-  command to do the analysis, for details hot it works see https://semgrep.dev/docs/cli-reference.
+  command to do the analysis. For details on usage see https://semgrep.dev/docs/cli-reference.
 
 executor: semgrep
 
@@ -29,7 +29,7 @@ parameters:
     type: string
     default: ''
     description: >
-      The name of the base branch for this scan. Usually some long-lived branch, e.g. default branch.
+      The name of the base branch for this scan. Commonly a long-lived branch, e.g. "main" or "master".
 
 steps:
   - checkout

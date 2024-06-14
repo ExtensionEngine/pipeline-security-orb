@@ -12,7 +12,7 @@ if [[ -n $CIRCLE_BRANCH ]]; then
 fi
 
 echo "Starting the directory scan at path '$REPO_PATH'"
-echo "Using exported gitleaks args '$GITLEAKS_ARGS'"
+echo "Using exported Gitleaks args '$GITLEAKS_ARGS'"
 echo "Using '$BASE_BRANCH' as the base branch"
 echo "Using '$CURRENT_BRANCH' as the current branch"
 

@@ -1,5 +1,5 @@
 description: >
-  A Docker executor using official Semgrep image based on Alpine Linux.
+  A Docker executor using the official Semgrep image based on Alpine Linux.
 
 parameters:
   tag:

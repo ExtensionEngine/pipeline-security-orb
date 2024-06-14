@@ -5,6 +5,7 @@ description: |
   up to last commit in a build.
   The base revision should be provided for the most accurate results, while the base branch
   can be overridden if necessary.
+
 usage:
   version: 2.1
   orbs:
