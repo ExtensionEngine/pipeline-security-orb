@@ -26,25 +26,14 @@ ARGS="$ARGS --config $(join ' --config ' "${RULE_ARRAY[@]}")"
 
 ########### BASELINE COMMIT ###########
 
-BASE_BRANCH=$(git rev-parse --abbrev-ref origin/HEAD | cut -c8-)
-CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-
-if [[ -n $BASE_BRANCH_OVERRIDE ]]; then
-  BASE_BRANCH=$BASE_BRANCH_OVERRIDE
-fi
-
-if [[ -n $CIRCLE_BRANCH ]]; then
-  CURRENT_BRANCH=$CIRCLE_BRANCH
-fi
-
 BASELINE_COMMIT=""
 
-if [ "$FULL_SCAN" -eq 0 ] && [[ "$BASE_BRANCH" = "$CURRENT_BRANCH" ]]; then
+if [ "$FULL_SCAN" -eq 0 ] && [[ "$GIT_BASE_BRANCH" = "$GIT_CURRENT_BRANCH" ]]; then
   # Usually when changes are merged back into a long-lived branch, e.g. trunk
   BASELINE_COMMIT=$(git rev-parse HEAD~1)
-elif [ "$FULL_SCAN" -eq 0 ] && [[ "$BASE_BRANCH" != "$CURRENT_BRANCH" ]]; then
+elif [ "$FULL_SCAN" -eq 0 ] && [[ "$GIT_BASE_BRANCH" != "$GIT_CURRENT_BRANCH" ]]; then
   # Usually a short-lived branch, in other words a pull request
-  BASELINE_COMMIT="$(git rev-parse "$BASE_BRANCH")"
+  BASELINE_COMMIT="$(git rev-parse "$GIT_BASE_BRANCH")"
 fi
 
 if [[ -n $BASELINE_COMMIT ]]; then
