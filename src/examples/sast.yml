@@ -4,6 +4,7 @@ description: |
   are scanned, or files scoped to the pull request if a short-lived branch is in question.
   There is an option to scan all files inside a repository, change a base branch,
   and enforce a different set of scan rules.
+
 usage:
   version: 2.1
   orbs:
