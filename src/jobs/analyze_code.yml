@@ -34,6 +34,11 @@ parameters:
 steps:
   - checkout
   - run:
+      name: Export Git branches
+      environment:
+        BASE_BRANCH_OVERRIDE: <<parameters.base_branch>>
+      command: <<include(scripts/export-git-branches.sh)>>
+  - run:
       name: Analyze code
       working_directory: <<parameters.path>>
       environment:
@@ -41,5 +46,4 @@ steps:
         FULL_SCAN: <<parameters.full_scan>>
         VERBOSE: <<parameters.verbose>>
         RULES: <<parameters.rules>>
-        BASE_BRANCH_OVERRIDE: <<parameters.base_branch>>
       command: <<include(scripts/analyze-code.sh)>>
