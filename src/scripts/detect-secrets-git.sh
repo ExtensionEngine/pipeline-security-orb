@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Starting the directory scan at path '$REPO_PATH'"
+echo "Starting the repository scan at path '$REPO_PATH'"
 echo "Using exported Gitleaks args '$GITLEAKS_ARGS'"
 echo "Using '$GIT_BASE_BRANCH' as the base branch"
 echo "Using '$GIT_CURRENT_BRANCH' as the current branch"
