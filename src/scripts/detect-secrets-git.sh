@@ -27,6 +27,3 @@ else
   echo "Scanning all the commits in the current branch '$GIT_CURRENT_BRANCH'"
   eval gitleaks "$GITLEAKS_ARGS" --log-opts="$GIT_BASE_BRANCH..$GIT_CURRENT_BRANCH"
 fi
-
-
-
