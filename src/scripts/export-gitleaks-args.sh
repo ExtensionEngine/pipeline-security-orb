@@ -1,7 +1,6 @@
 #!/bin/bash
 
-REPORT="--report-format=sarif --report-path=/tmp/gitleaks-report.sarif"
-ARGS="detect --source . --log-level=debug --verbose --redact $REPORT --exit-code=2"
+ARGS="detect --source . --log-level=debug --verbose --redact --exit-code=2"
 
 if [[ -n "$CONFIG_FILE" ]]; then
   ARGS="$ARGS --config=$CONFIG_FILE"
