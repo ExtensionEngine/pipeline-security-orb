@@ -2,6 +2,12 @@
 
 ########### DEFAULTS ###########
 
+# The `experimental` flag is needed for Semgrep to work, otherwise
+# for unknown reason it will fail with exit code 2. This behavior
+# is only observed in CI environment.
+# When the `experimental` flag is set, saving the output to the
+# file will not work and is just silently ignored.
+
 ARGS="--experimental --error --strict --metrics off"
 
 ########### VERBOSE ###########
