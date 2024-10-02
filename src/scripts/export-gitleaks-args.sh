@@ -1,13 +1,13 @@
 #!/bin/bash
 
-ARGS="detect --source . --log-level=debug --verbose --redact --exit-code=2"
+ARGS="--log-level=debug --verbose --redact --exit-code=2"
 
-if [[ -n "$CONFIG_FILE" ]]; then
-  ARGS="$ARGS --config=$CONFIG_FILE"
+if [[ -n "$PARAM_STR_CONFIG_FILE" ]]; then
+  ARGS="$ARGS --config=$PARAM_STR_CONFIG_FILE"
 fi
 
-if [[ -n "$BASELINE_REPORT" ]]; then
-  ARGS="$ARGS --baseline-path=$BASELINE_REPORT"
+if [[ -n "$PARAM_STR_BASELINE_REPORT" ]]; then
+  ARGS="$ARGS --baseline-path=$PARAM_STR_BASELINE_REPORT"
 fi
 
 echo "export GITLEAKS_ARGS='$ARGS'" >> "$BASH_ENV"
