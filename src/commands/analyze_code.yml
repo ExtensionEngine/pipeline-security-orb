@@ -32,7 +32,7 @@ steps:
         - run:
             name: Export Git branches
             environment:
-              BASE_BRANCH_OVERRIDE: <<parameters.base_branch>>
+              PARAM_STR_BASE_BRANCH: <<parameters.base_branch>>
             command: <<include(scripts/export-git-branches.sh)>>
   - run:
       name: Analyze code <<#parameters.full_scan>>full<</parameters.full_scan>><<^parameters.full_scan>>diff<</parameters.full_scan>>
