@@ -12,8 +12,9 @@ ARGS="--experimental --error --strict --metrics off"
 
 ########### VERBOSE ###########
 
-if [ "$VERBOSE" -eq 1 ]; then
+if [ "$PARAM_BOOL_VERBOSE" -eq 1 ]; then
   ARGS="$ARGS --verbose"
+
 fi
 
 ########### CONFIG ###########
@@ -26,7 +27,7 @@ function join() {
   printf "%s" "$first" "${@/#/$separator}"
 }
 
-IFS=' ' read -ra RULE_ARRAY <<< "$RULES"
+IFS=' ' read -ra RULE_ARRAY <<< "$PARAM_STR_RULES"
 
 ARGS="$ARGS --config $(join ' --config ' "${RULE_ARRAY[@]}")"
 
@@ -34,21 +35,36 @@ ARGS="$ARGS --config $(join ' --config ' "${RULE_ARRAY[@]}")"
 
 BASELINE_COMMIT=""
 
-if [ "$FULL_SCAN" -eq 0 ] && [[ "$GIT_BASE_BRANCH" = "$GIT_CURRENT_BRANCH" ]]; then
-  # Usually when changes are merged back into a long-lived branch, e.g. trunk
-  BASELINE_COMMIT=$(git rev-parse HEAD~1)
-elif [ "$FULL_SCAN" -eq 0 ] && [[ "$GIT_BASE_BRANCH" != "$GIT_CURRENT_BRANCH" ]]; then
-  # Usually a short-lived branch, in other words a pull request
-  BASELINE_COMMIT="$(git rev-parse "$GIT_BASE_BRANCH")"
+if [ "$PARAM_BOOL_FULL_SCAN" -eq 0 ]; then
+  echo "Using '$GIT_BASE_BRANCH' as the base branch"
+  echo "Using '$GIT_CURRENT_BRANCH' as the current branch"
+
+  if [[ "$GIT_BASE_BRANCH" = "$GIT_CURRENT_BRANCH" ]]; then
+    # Usually when changes are merged back into a long-lived branch, e.g. trunk
+    BASELINE_COMMIT=$(git rev-parse HEAD~1)
+
+    echo "Scanning diff after the baseline 'HEAD~1'"
+
+  else
+    # Usually a short-lived branch, in other words a pull request
+    BASELINE_COMMIT="$(git rev-parse "$GIT_BASE_BRANCH")"
+
+    echo "Scanning diff introduced by the current branch '$GIT_CURRENT_BRANCH'"
+
+  fi
+
+else
+  echo "Scanning entire codebase"
+
 fi
 
 if [[ -n $BASELINE_COMMIT ]]; then
   ARGS="$ARGS --baseline-commit $BASELINE_COMMIT"
+
 fi
 
 ########### COMMAND ###########
 
-echo "Running Semgrep scan, at path '$DIR_PATH', with following arguments:"
-echo "$ARGS"
-
+set -x
 eval semgrep "$ARGS"
+set +x

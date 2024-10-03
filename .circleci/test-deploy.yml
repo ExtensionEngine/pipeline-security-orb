@@ -57,13 +57,11 @@ workflows:
           name: detect_secrets_git_no_revision
           base_branch: <<pipeline.git.branch>>
           filters: *filters
-      - security/analyze_code:
+      - security/analyze_code_diff:
           name: analyze_code_diff
-          path: ~/project/sample
           filters: *filters
-      - security/analyze_code:
+      - security/analyze_code_full:
           name: analyze_code_full
-          full_scan: true
           rules: p/cwe-top-25
           filters: *filters
       - orb-tools/pack:

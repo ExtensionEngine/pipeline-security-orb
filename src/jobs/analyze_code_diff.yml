@@ -1,0 +1,28 @@
+description: >
+  Run a diff-aware scan on the codebase and report findings.
+
+executor: semgrep
+
+parameters:
+  verbose:
+    type: boolean
+    default: false
+    description: The flag indicates whether to show more details about rules, files, etc.
+  rules:
+    type: string
+    default: p/default p/owasp-top-ten p/r2c-security-audit p/eslint
+    description: >
+      The space-separated list of Semgrep rules, e.g. YAML configuration file, URL of the configuration
+      file, or Semgrep registry entry name.
+  base_branch:
+    type: string
+    default: ''
+    description: >
+      The name of the base branch for this scan. Commonly a long-lived branch, e.g. "main" or "master".
+
+steps:
+  - checkout
+  - analyze_code:
+      verbose: <<parameters.verbose>>
+      rules: <<parameters.rules>>
+      base_branch: <<parameters.base_branch>>
