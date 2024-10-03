@@ -1,0 +1,23 @@
+description: >
+  Run a full scan on the codebase and report findings.
+
+executor: semgrep
+
+parameters:
+  verbose:
+    type: boolean
+    default: false
+    description: The flag indicates whether to show more details about rules, files, etc.
+  rules:
+    type: string
+    default: p/default p/owasp-top-ten p/r2c-security-audit p/eslint
+    description: >
+      The space-separated list of Semgrep rules, e.g. YAML configuration file, URL of the configuration
+      file, or Semgrep registry entry name.
+
+steps:
+  - checkout
+  - analyze_code:
+      full_scan: true
+      verbose: <<parameters.verbose>>
+      rules: <<parameters.rules>>
