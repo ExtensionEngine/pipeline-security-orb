@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   orb-tools: circleci/orb-tools@12.0
+  core: studion/core@1.0.0
   security: {}
 
 filters: &filters
@@ -13,21 +14,23 @@ release-filters: &release-filters
   tags:
     only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
-workflows:
-  test-deploy:
-    jobs:
+jobs:
+  scan_dependencies_prod_npm:
+    executor: core/node
+    steps:
       - security/scan_dependencies:
-          name: scan_dependencies_npm
           pkg_manager: npm
           pkg_json_dir: ~/project/sample
-          filters: *filters
+  scan_dependencies_prod_pnpm:
+    executor: core/node
+    steps:
       - security/scan_dependencies:
-          name: scan_dependencies_pnpm
           pkg_manager: pnpm
           pkg_json_dir: ~/project/sample
-          filters: *filters
+  scan_dependencies_command:
+    executor: core/node
+    steps:
       - security/scan_dependencies:
-          name: scan_dependencies_command
           pkg_manager: npm
           pkg_json_dir: ~/project/sample
           scan_command: |
@@ -35,6 +38,15 @@ workflows:
             if ! npm audit --audit-level=high; then
               echo "Scan found dependencies with high vulnerability level"
             fi
+
+workflows:
+  test-deploy:
+    jobs:
+      - scan_dependencies_prod_npm:
+          filters: *filters
+      - scan_dependencies_prod_pnpm:
+          filters: *filters
+      - scan_dependencies_command:
           filters: *filters
       - security/detect_secrets_dir:
           name: detect_secrets_dir
@@ -72,8 +84,8 @@ workflows:
           pub_type: production
           requires:
             - orb-tools/pack
-            - scan_dependencies_npm
-            - scan_dependencies_pnpm
+            - scan_dependencies_prod_npm
+            - scan_dependencies_prod_pnpm
             - scan_dependencies_command
             - detect_secrets_dir
             - detect_secrets_git_base_revision

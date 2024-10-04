@@ -1,13 +1,11 @@
 description: >
-  Scan production dependencies for critical and high severity vulnerabilities.
+  By default, scan production dependencies for critical and high severity vulnerabilities.
   Uses the "audit" command of the targeted package manager.
-
-executor: core/node
 
 parameters:
   pkg_manager:
     type: string
-    default: $DEFAULT_PKG_MANAGER
+    default: ${DEFAULT_PKG_MANAGER}
     description: |
       Choose Node.js package manager to use. Supports npm and pnpm.
       The package manager must follow the format <name>[@<version|tag>].
@@ -35,7 +33,7 @@ steps:
   - core/ensure_pkg_manager:
       ref: <<parameters.pkg_manager>>
   - run:
-      name: Scan dependencies
+      name: Scan dependencies <<^parameters.scan_command>>prod<</parameters.scan_command>>
       working_directory: <<parameters.pkg_json_dir>>
       environment:
         SCAN_CMD: <<parameters.scan_command>>
