@@ -36,5 +36,5 @@ steps:
       name: Scan dependencies <<^parameters.scan_command>>prod<</parameters.scan_command>>
       working_directory: <<parameters.pkg_json_dir>>
       environment:
-        SCAN_CMD: <<parameters.scan_command>>
+        PARAM_STR_SCAN_COMMAND: <<parameters.scan_command>>
       command: <<include(scripts/scan-dependencies.sh)>>
