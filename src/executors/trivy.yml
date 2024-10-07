@@ -1,0 +1,19 @@
+description: >
+  A Docker executor using the official Trivy image based on Alpine Linux.
+
+parameters:
+  tag:
+    type: string
+    default: latest
+    description: >
+      Choose a specific aquasec/trivy image tag:
+      https://hub.docker.com/r/aquasec/trivy/tags
+  resource_class:
+    type: enum
+    enum: ['small', 'medium', 'medium+', 'large', 'xlarge', '2xlarge', '2xlarge+']
+    default: 'medium'
+    description: Choose the executor resource class
+
+docker:
+  - image: aquasec/trivy:<<parameters.tag>>
+resource_class: <<parameters.resource_class>>

@@ -1,0 +1,19 @@
+description: |
+  By default, the "scan_dockerfile" command checks if a Dockerfile, in the working directory,
+  has high or critical severty misconfigurations.
+  There is an option to specify a different directory with Dockerfile for a scan.
+
+usage:
+  version: 2.1
+  orbs:
+    security: studion/security@x.y.z
+  jobs:
+    scan_app_dockerfile:
+      executor: security/trivy
+      steps:
+        - security/scan_dockerfile:
+            dockerfile_dir: ~/app
+  workflows:
+    misconfigurations:
+      jobs:
+        - scan_app_dockerfile

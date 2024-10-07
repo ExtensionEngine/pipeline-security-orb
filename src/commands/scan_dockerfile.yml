@@ -1,0 +1,24 @@
+description: >
+  By default, scan a Dockerfile for high and critical severity misconfigurations.
+  Underneath the Trivy (https://github.com/aquasecurity/trivy) does the scanning.
+
+parameters:
+  dockerfile_dir:
+    type: string
+    default: '.'
+    description: >
+      The path to the directory containing the Dockerfile. Defaults to . (working directory).
+  severity:
+    type: string
+    default: 'HIGH,CRITICAL'
+    description: >
+      The severity levels, separated by a comma, of misconfigurations to scan for. Supported severities,
+      starting from least precedence, UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL. Dafaults to HIGH,CRITICAL.
+
+steps:
+  - run:
+      name: Scan Dockerfile
+      working_directory: <<parameters.dockerfile_dir>>
+      environment:
+        PARAM_STR_SEVERITY: <<parameters.severity>>
+      command: <<include(scripts/scan-dockerfile.sh)>>
