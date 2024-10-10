@@ -38,6 +38,12 @@ jobs:
             if ! npm audit --audit-level=high; then
               echo "Scan found dependencies with high vulnerability level"
             fi
+  scan_dockerfile:
+    executor: security/trivy
+    steps:
+      - checkout
+      - security/scan_dockerfile:
+          dockerfile_dir: ./sample
 
 workflows:
   test-deploy:
@@ -47,6 +53,8 @@ workflows:
       - scan_dependencies_prod_pnpm:
           filters: *filters
       - scan_dependencies_command:
+          filters: *filters
+      - scan_dockerfile:
           filters: *filters
       - security/detect_secrets_dir:
           name: detect_secrets_dir
