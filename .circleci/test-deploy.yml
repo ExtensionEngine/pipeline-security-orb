@@ -18,18 +18,21 @@ jobs:
   scan_dependencies_prod_npm:
     executor: core/node
     steps:
+      - checkout
       - security/scan_dependencies:
           pkg_manager: npm
           pkg_json_dir: ~/project/sample
   scan_dependencies_prod_pnpm:
     executor: core/node
     steps:
+      - checkout
       - security/scan_dependencies:
           pkg_manager: pnpm
           pkg_json_dir: ~/project/sample
   scan_dependencies_command:
     executor: core/node
     steps:
+      - checkout
       - security/scan_dependencies:
           pkg_manager: npm
           pkg_json_dir: ~/project/sample

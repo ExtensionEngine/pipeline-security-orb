@@ -25,7 +25,6 @@ parameters:
       "npm audit --audit-level=high --omit=dev" or "pnpm audit --audit-level high --prod", are unsuitable.
 
 steps:
-  - checkout
   - run:
       name: Check the lockfile
       working_directory: <<parameters.pkg_json_dir>>

@@ -11,6 +11,7 @@ usage:
     scan_command:
       executor: core/node
       steps:
+        - checkout
         - security/scan_dependencies:
             pkg_json_dir: ~/app
             scan_command: pnpm audit
