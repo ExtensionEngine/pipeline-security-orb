@@ -98,6 +98,7 @@ workflows:
             - scan_dependencies_prod_npm
             - scan_dependencies_prod_pnpm
             - scan_dependencies_command
+            - scan_dockerfile
             - detect_secrets_dir
             - detect_secrets_git_base_revision
             - analyze_code_diff
