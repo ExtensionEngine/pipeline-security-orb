@@ -7,6 +7,7 @@ Key features:
 - Detect secret leaks on the changeset or target a directory
 - Run a diff-aware static analysis tool to detect vulnerabilities
 - Opt for a full scan of the codebase when needed
+- Scan Dockerfiles for configuration issues
 
 ## Usage
 
