@@ -1,6 +1,5 @@
 #!/bin/bash
 
-EVAL_GITLEAKS_ARGS=$(eval echo "${GITLEAKS_ARGS}")
 LOG_OPTS=""
 
 echo "Using '${GIT_BASE_BRANCH}' as the base branch"
@@ -35,8 +34,11 @@ else
 
 fi
 
-EVAL_GITLEAKS_ARGS="${EVAL_GITLEAKS_ARGS} --log-opts=${LOG_OPTS}"
-
 set -x
-eval gitleaks git "${EVAL_GITLEAKS_ARGS}" "${PARAM_STR_SOURCE}"
+eval \
+  gitleaks \
+  git \
+  "${GITLEAKS_ARGS}" \
+  --log-opts="${LOG_OPTS}" \
+  .
 set +x
