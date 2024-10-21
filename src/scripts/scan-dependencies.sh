@@ -1,11 +1,11 @@
 #!/bin/bash
 
-PARAM_STR_SCAN_COMMAND=$(circleci env subst "${PARAM_STR_SCAN_COMMAND}")
-
 if [[ -n "${PARAM_STR_SCAN_COMMAND}" ]]; then
   echo "Running custom scan command: ${PARAM_STR_SCAN_COMMAND}"
 
+  set -x
   eval "${PARAM_STR_SCAN_COMMAND}"
+  set +x
 
 elif [[ "${CURRENT_PKG_MANAGER}" == "npm" ]]; then
   echo "Running npm audit with high audit level omitting dev dependencies"
