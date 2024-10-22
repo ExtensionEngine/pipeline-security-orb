@@ -14,24 +14,19 @@ if [[ "${GIT_BASE_BRANCH}" = "${GIT_CURRENT_BRANCH}" ]]; then
 
     echo "The base revision is empty or invalid"
     echo "Scanning using 'HEAD~1' as the base revision"
-
   elif [[ "${PARAM_STR_BASE_REVISION}" == "${CIRCLE_SHA1}" ]]; then
     LOG_OPTS=-1
 
     echo "The base revision is the current revision"
     echo "Scanning only last commit"
-
   else
     echo "Scanning using the provided base revision '${PARAM_STR_BASE_REVISION}'"
-
   fi
-
 else
   # Usually a short lived branch, that is a pull request
   echo "Scanning all the commits in the current branch '${GIT_CURRENT_BRANCH}'"
 
   LOG_OPTS="${GIT_BASE_BRANCH}..${GIT_CURRENT_BRANCH}"
-
 fi
 
 set -x
