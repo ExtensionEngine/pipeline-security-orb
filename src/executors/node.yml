@@ -1,0 +1,20 @@
+description: >
+  Docker executor integrating a suite of security tools for vulnerability
+  detection within CircleCI Node.js pipelines.
+
+parameters:
+  tag:
+    type: string
+    default: lts
+    description: >
+      Choose a specific studiondev/node-security image tag:
+      https://hub.docker.com/r/studiondev/node-security/tags
+  resource_class:
+    type: enum
+    enum: ['small', 'medium', 'medium+', 'large', 'xlarge', '2xlarge', '2xlarge+']
+    default: 'medium'
+    description: Choose the executor resource class
+
+docker:
+  - image: studiondev/node-security:<<parameters.tag>>
+resource_class: <<parameters.resource_class>>
