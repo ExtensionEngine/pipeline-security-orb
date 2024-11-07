@@ -42,7 +42,7 @@ jobs:
               echo "Scan found dependencies with high vulnerability level"
             fi
   scan_dockerfile:
-    executor: security/trivy
+    executor: security/node
     steps:
       - checkout
       - security/scan_dockerfile:
