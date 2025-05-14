@@ -47,6 +47,18 @@ jobs:
       - checkout
       - security/scan_dockerfile:
           dockerfile_dir: ./sample
+  install_trivy:
+    executor: core/node
+    steps:
+      - security/install_trivy:
+          version: v0.59.1
+      - run:
+          name: Validate installation
+          command: |
+            if ! trivy --version | grep -q "0.59.1"; then
+              echo "Failed to install chosen trivy version"
+              exit 1
+            fi
 
 workflows:
   test-deploy:
@@ -87,6 +99,8 @@ workflows:
           name: analyze_code_full
           rules: p/cwe-top-25
           filters: *filters
+      - install_trivy:
+          filters: *filters
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
@@ -103,5 +117,6 @@ workflows:
             - detect_secrets_git_base_revision
             - analyze_code_diff
             - analyze_code_full
+            - install_trivy
           context: orb-publishing
           filters: *release-filters
