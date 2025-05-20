@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   orb-tools: circleci/orb-tools@12.0
   core: studion/core@1.0.0
+  docker: circleci/docker@2.8.2
   security: {}
 
 filters: &filters
@@ -47,6 +48,29 @@ jobs:
       - checkout
       - security/scan_dockerfile:
           dockerfile_dir: ./sample
+  generate_sbom:
+    machine:
+      image: ubuntu-2204:current
+    steps:
+      - checkout
+      - docker/build:
+          image: security-sample
+          tag: v1
+          path: ./sample
+          docker-context: ./sample
+      - security/install_syft
+      - security/generate_sbom:
+          image: docker.io/security-sample:v1
+          out_path: /tmp/sample-sbom.json
+      - run:
+          name: Check SBOM output
+          command: |
+            if [ ! -f "/tmp/sample-sbom.json" ]; then
+              echo "SBOM output not found"
+              exit 1
+            fi
+
+            rm -f /tmp/sample-sbom.json
   install_trivy:
     executor: core/node
     steps:
@@ -95,6 +119,8 @@ workflows:
           filters: *filters
       - scan_dockerfile:
           filters: *filters
+      - generate_sbom:
+          filters: *filters
       - security/detect_secrets_dir:
           name: detect_secrets_dir
           filters: *filters
@@ -141,6 +167,7 @@ workflows:
             - scan_dependencies_prod_pnpm
             - scan_dependencies_command
             - scan_dockerfile
+            - generate_sbom
             - detect_secrets_dir
             - detect_secrets_git_base_revision
             - analyze_code_diff
