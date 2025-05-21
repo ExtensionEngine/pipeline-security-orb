@@ -71,6 +71,18 @@ jobs:
               echo "Failed to install chosen syft version"
               exit 1
             fi
+  install_grype:
+    executor: core/node
+    steps:
+      - security/install_grype:
+          version: v0.92.1
+      - run:
+          name: Validate installation
+          command: |
+            if ! grype --version | grep -q "0.92.1"; then
+              echo "Failed to install chosen grype version"
+              exit 1
+            fi
 
 workflows:
   test-deploy:
@@ -115,6 +127,8 @@ workflows:
           filters: *filters
       - install_syft:
           filters: *filters
+      - install_grype:
+          filters: *filters
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
@@ -133,5 +147,6 @@ workflows:
             - analyze_code_full
             - install_trivy
             - install_syft
+            - install_grype
           context: orb-publishing
           filters: *release-filters
