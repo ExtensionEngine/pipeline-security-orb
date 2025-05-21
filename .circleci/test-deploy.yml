@@ -59,6 +59,18 @@ jobs:
               echo "Failed to install chosen trivy version"
               exit 1
             fi
+  install_syft:
+    executor: core/node
+    steps:
+      - security/install_syft:
+          version: v1.25.1
+      - run:
+          name: Validate installation
+          command: |
+            if ! syft --version | grep -q "1.25.1"; then
+              echo "Failed to install chosen syft version"
+              exit 1
+            fi
 
 workflows:
   test-deploy:
@@ -101,6 +113,8 @@ workflows:
           filters: *filters
       - install_trivy:
           filters: *filters
+      - install_syft:
+          filters: *filters
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
@@ -118,5 +132,6 @@ workflows:
             - analyze_code_diff
             - analyze_code_full
             - install_trivy
+            - install_syft
           context: orb-publishing
           filters: *release-filters
