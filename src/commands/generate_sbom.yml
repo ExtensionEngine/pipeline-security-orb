@@ -1,0 +1,46 @@
+description: >
+  Generate Software Bill of Materials (SBOM) from Docker image.
+  All the work is done by Syft, for details see https://github.com/anchore/syft?tab=readme-ov-file#getting-started.
+  It is possible to provide additional configurable values by following this
+  guide https://github.com/anchore/syft/wiki/configuration#config-file.
+  However some options cannot be overridden, such as output and source
+  since they are passed as command line arguments and thus have the highest precedence.
+
+parameters:
+  image:
+    type: string
+    description: >
+      The Docker image to generate SBOM from. Support following schemes
+      (1) repo-name/image-name:tag (2) /path/to/image.tar. Bases on provided scheme
+      it will either use local Docker daemon or tarball archive from disk as a source.
+  format:
+    type: enum
+    enum:
+      - cyclonedx-json
+      - spdx-json
+      - github-json
+      - syft-json
+    default: cyclonedx-json
+    description: >
+      Choose the output format of generated SBOM. By default a JSON report
+      conforming to the CycloneDX specification.
+  out_path:
+    type: string
+    default: /tmp/sbom.json
+    description: Path to the file to write the SBOM report to.
+  exclude:
+    type: string
+    default: ""
+    description: >
+      Space delimited list of GLOB expressions specifying files and paths to
+      exclude from the source.
+
+steps:
+  - run:
+      name: Generate SBOM
+      environment:
+        PARAM_STR_IMAGE: <<parameters.image>>
+        PARAM_ENUM_FORMAT: <<parameters.format>>
+        PARAM_STR_OUT_PATH: <<parameters.out_path>>
+        PARAM_STR_EXCLUDE: <<parameters.exclude>>
+      command: <<include(scripts/generate-sbom.sh)>>

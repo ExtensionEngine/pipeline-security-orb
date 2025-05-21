@@ -1,0 +1,27 @@
+description: |
+  The "generate_sbom" command generates SBOM from the Docker image.
+  By default, the Docker daemon is used as a source. This can be changed
+  to use the Docker archive from the disk by providing the path to the tarball
+  file as the "image".
+  There is an option to customize output path of the report, exclude
+  directories or files from the scan with glob expressions or use
+  different output format.
+
+usage:
+  version: 2.1
+  orbs:
+    security: studion/security@x.y.z
+  jobs:
+    sbom:
+      executor: security/node
+      steps:
+        - checkout
+        - security/generate_sbom:
+            image: studiondev/node-security:lts
+            format: github-json
+            out_path: /tmp/reports/lts-sbom.json
+            exclude: /etc /home/**/*.json
+  workflows:
+    compliance:
+      jobs:
+        - sbom

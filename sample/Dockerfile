@@ -27,7 +27,9 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-l
 
 FROM install as build
 
-COPY ./src tsconfig.json tsconfig.tsbuildinfo ./
+# Explicitly preserve src dir hierarchy to resolve TS18003 during the build phase
+COPY src/ ./src/
+COPY tsconfig.json tsconfig.tsbuildinfo ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 
