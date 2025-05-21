@@ -1,0 +1,18 @@
+description: >
+  Install Syft (https://github.com/anchore/syft) a CLI tool for generating
+  a Software Bill of Materials (SBOM) from container images and filesystems.
+
+parameters:
+  version:
+    type: string
+    default: ""
+    description: >
+      Choose the specific version of Syft from https://github.com/anchore/syft/releases.
+      By default, the latest version is picked.
+
+steps:
+  - run:
+      name: Install Syft
+      environment:
+        PARAM_STR_VERSION: <<parameters.version>>
+      command: <<include(scripts/install-syft.sh)>>
