@@ -12,8 +12,9 @@ parameters:
     type: string
     default: 'HIGH,CRITICAL'
     description: >
-      The severity levels, separated by a comma, of misconfigurations to scan for. Supported severities,
-      starting from least precedence, UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL. Dafaults to HIGH,CRITICAL.
+      Comma delimited list of misconfiguration severity levels to scan for. Supported
+      levels, in order from least to most critical - UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL.
+      By default, scans for HIGH and CRITICAL severity levels.
 
 steps:
   - run:
