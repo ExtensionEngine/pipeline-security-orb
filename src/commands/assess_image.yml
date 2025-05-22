@@ -1,0 +1,73 @@
+description: >
+  Scan Docker images for vulnerabilities and secrets.
+  Vulnerability scan is performed by Grype (https://github.com/anchore/grype)
+  while scanning for secrets is executed by Trivy (https://github.com/aquasecurity/trivy).
+  It is possible to provide additional configurable options by following the Grype
+  (https://github.com/anchore/grype?tab=readme-ov-file#configuration) and Trivy
+  (https://trivy.dev/latest/docs/configuration/) guides, respectively.
+  However, some options cannot be overridden, such as source and format,
+  since they are passed as command line arguments and thus have the highest precedence.
+
+parameters:
+  image:
+    type: string
+    description: >
+      The Docker image to scan. Support following schemes
+      (1) 'repo-name/image-name:tag' (2) '/path/to/image.tar'. Bases on provided scheme
+      it will either use local Docker daemon or tarball archive from disk as a source.
+  scanners:
+    type: string
+    default: vuln secret
+    description: >
+      Space delimited list of scans to run against the image. By default, runs all
+      available scans. Following is available (1) 'vuln' - vulnerability scan
+      (2) 'secret' - secrets scan of the image and its configuration.
+  severity:
+    type: enum
+    enum:
+      - low
+      - medium
+      - high
+      - critical
+    default: high
+    description: >
+      Choose a severity level to fail on with the error code. By default,
+      when severity level of 'high' or greater is detected the command will
+      fail with exit code 2.
+  exclude:
+    type: string
+    default: ""
+    description: >
+      Space delimited list of GLOB expressions specifying files and paths to
+      exclude from the vulnerability scan. The secrets scan is not affected by this.
+  ignore_fix_status:
+    type: string
+    default: ""
+    description: >
+      Comma delimited list of matches to ignore based on the vulnerability fix status.
+      Available options - 'fixed', 'not-fixed', 'wont-fix', 'unknown'.
+  report_format:
+    type: enum
+    enum:
+      - cyclonedx-json
+      - json
+    default: cyclonedx-json
+    description: >
+      Choose the format of the vulnerability report. By default, a JSON format
+      conforming ot the CycloneDX specification.
+  report_path:
+    type: string
+    default: /tmp/vuln-report.json
+    description: Path to the file to write the vulnerability report to.
+
+steps:
+  - run:
+      name: Assess image "<<parameters.image>>"
+      environment:
+        PARAM_STR_IMAGE: <<parameters.image>>
+        PARAM_STR_SCANNERS: <<parameters.scanners>>
+        PARAM_ENUM_SEVERITY: <<parameters.severity>>
+        PARAM_STR_IGNORE_FIX_STATUS: <<parameters.ignore_fix_status>>
+        PARAM_ENUM_REPORT_FORMAT: <<parameters.report_format>>
+        PARAM_STR_REPORT_PATH: <<parameters.report_path>>
+      command: <<include(scripts/assess-image.sh)>>

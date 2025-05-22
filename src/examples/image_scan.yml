@@ -1,0 +1,28 @@
+description: |
+  By default, the "assess_image" command scans images for high and critical
+  severity vulnerabilities and secrets. It uses the Docker daemon as the
+  image source, or alternatively an image tarball file from disk if provided.
+  There is an option to choose scanners, set severity levels, ignore findings
+  based on fix status, exclude directories or files using the glob expressions,
+  select different report format, and customize report path.
+
+usage:
+  version: 2.1
+  orbs:
+    security: studion/security@x.y.z
+  jobs:
+    vuln-and-secrets:
+      machine:
+        image: ubuntu-2204:current
+      steps:
+        - checkout
+        - security/assess_image:
+            image: studiondev/node-security:lts
+            severity: medium
+            ignore-fix-status: not-fixed,wont-fix
+            exclude: /usr /var/**/*.log
+            report-path: /tmp/reports/lts-vuln.json
+  workflows:
+    scan-image:
+      jobs:
+        - vuln-and-secrets

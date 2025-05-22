@@ -48,17 +48,19 @@ jobs:
       - checkout
       - security/scan_dockerfile:
           dockerfile_dir: ./sample
-  generate_sbom:
+  generate_sbom_and_assess_image:
     machine:
       image: ubuntu-2204:current
     steps:
       - checkout
+      - security/install_grype
+      - security/install_syft
+      - security/install_trivy
       - docker/build:
           image: security-sample
           tag: v1
           path: ./sample
           docker-context: ./sample
-      - security/install_syft
       - security/generate_sbom:
           image: docker.io/security-sample:v1
           out_path: /tmp/sample-sbom.json
@@ -69,8 +71,22 @@ jobs:
               echo "SBOM output not found"
               exit 1
             fi
-
+      - security/assess_image:
+          image: docker.io/security-sample:v1
+          severity: critical
+          report_path: /tmp/sample-vuln-report.json
+      - run:
+          name: Check vulnerability report
+          command: |
+            if [ ! -f "/tmp/sample-vuln-report.json" ]; then
+              echo "Vulnerability report not found"
+              exit 1
+            fi
+      - run:
+          name: Cleanup
+          command: |
             rm -f /tmp/sample-sbom.json
+            rm -f /tmp/sample-vuln-report.json
   install_trivy:
     executor: core/node
     steps:
@@ -119,7 +135,7 @@ workflows:
           filters: *filters
       - scan_dockerfile:
           filters: *filters
-      - generate_sbom:
+      - generate_sbom_and_assess_image:
           filters: *filters
       - security/detect_secrets_dir:
           name: detect_secrets_dir
@@ -167,7 +183,7 @@ workflows:
             - scan_dependencies_prod_pnpm
             - scan_dependencies_command
             - scan_dockerfile
-            - generate_sbom
+            - generate_sbom_and_assess_image
             - detect_secrets_dir
             - detect_secrets_git_base_revision
             - analyze_code_diff
