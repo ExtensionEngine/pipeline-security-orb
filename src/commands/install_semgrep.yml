@@ -1,0 +1,20 @@
+description: >
+  Install Semgrep (https://github.com/semgrep/semgrep) a fast open-source static
+  analysis tool.
+  Requires the runtime environment with Python 3 and Pip. Installs Semgrep in
+  the user-specific location, not system-wide.
+
+parameters:
+  version:
+    type: string
+    default: ""
+    description: >
+      Choose the specific version of Semgrep from https://github.com/semgrep/semgrep/releases.
+      By default, the latest version is picked.
+
+steps:
+  - run:
+      name: Install Semgrep
+      environment:
+        PARAM_STR_VERSION: <<parameters.version>>
+      command: <<include(scripts/install-semgrep.sh)>>
