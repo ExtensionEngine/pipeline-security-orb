@@ -123,6 +123,19 @@ jobs:
               echo "Failed to install chosen grype version"
               exit 1
             fi
+  install_semgrep:
+    machine:
+      image: ubuntu-2404:current
+    steps:
+      - security/install_semgrep:
+          version: v1.121.0
+      - run:
+          name: Validate installation
+          command: |
+            if ! semgrep --version | grep -q "1.121.0"; then
+              echo "Failed to install chosen semgrep version"
+              exit 1
+            fi
 
 workflows:
   test-deploy:
@@ -171,6 +184,8 @@ workflows:
           filters: *filters
       - install_grype:
           filters: *filters
+      - install_semgrep:
+          filters: *filters
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
@@ -191,5 +206,6 @@ workflows:
             - install_trivy
             - install_syft
             - install_grype
+            - install_semgrep
           context: orb-publishing
           filters: *release-filters
