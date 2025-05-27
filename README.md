@@ -2,12 +2,15 @@
 
 An orb to facilitate security work within Studion CircleCI pipelines. Inspired by [ASH](https://github.com/awslabs/automated-security-helper).\
 Key features:
+
 - Audit dependencies for vulnerabilities, supports npm or pnpm
 - The default value of the package manager is picked from the environment
 - Detect secret leaks on the changeset or target a directory
 - Run a diff-aware static analysis tool to detect vulnerabilities
 - Opt for a full scan of the codebase when needed
 - Scan Dockerfiles for configuration issues
+- Check Docker images for vulnerabilities and secrets
+- Generate Software Bill of Materials (SBOM) from Docker images
 
 ## Usage
 
