@@ -1,0 +1,17 @@
+description: >
+  Install Gitleaks (https://github.com/gitleaks/gitleaks) a tool for detecting secrets.
+
+parameters:
+  version:
+    type: string
+    default: ""
+    description: >
+      Choose the specific version of Gitleaks from https://github.com/anchore/grype/releases.
+      By default, the latest version is picked.
+
+steps:
+  - run:
+      name: Install Gitleaks
+      environment:
+        PARAM_STR_VERSION: <<parameters.version>>
+      command: <<include(scripts/install-gitleaks.sh)>>
