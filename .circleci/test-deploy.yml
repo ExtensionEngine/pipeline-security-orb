@@ -136,6 +136,18 @@ jobs:
               echo "Failed to install chosen semgrep version"
               exit 1
             fi
+  install_gitleaks:
+    executor: core/node
+    steps:
+      - security/install_gitleaks:
+          version: v8.25.1
+      - run:
+          name: Validate installation
+          command: |
+            if ! gitleaks --version | grep -q "8.25.1"; then
+              echo "Failed to install chosen gitleaks version"
+              exit 1
+            fi
 
 workflows:
   test-deploy:
@@ -186,6 +198,8 @@ workflows:
           filters: *filters
       - install_semgrep:
           filters: *filters
+      - install_gitleaks:
+          filters: *filters
       - orb-tools/pack:
           filters: *release-filters
       - orb-tools/publish:
@@ -207,5 +221,6 @@ workflows:
             - install_syft
             - install_grype
             - install_semgrep
+            - install_gitleaks
           context: orb-publishing
           filters: *release-filters
