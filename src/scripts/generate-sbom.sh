@@ -6,6 +6,8 @@ if [[ -z "${PARAM_STR_IMAGE}" ]]; then
   exit 1
 fi
 
+PARAM_STR_IMAGE=$(circleci env subst "${PARAM_STR_IMAGE}")
+
 IMAGE_SOURCE="docker"
 
 if [[ "${PARAM_STR_IMAGE}" == *.tar ]]; then

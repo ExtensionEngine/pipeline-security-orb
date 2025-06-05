@@ -61,8 +61,11 @@ jobs:
           tag: v1
           path: ./sample
           docker-context: ./sample
+      - run:
+          name: Export image as env
+          command: echo "export IMAGE_TO_USE=docker.io/security-sample:v1" >> "${BASH_ENV}"
       - security/generate_sbom:
-          image: docker.io/security-sample:v1
+          image: ${IMAGE_TO_USE}
           out_path: /tmp/sample-sbom.json
       - run:
           name: Check SBOM output

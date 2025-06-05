@@ -14,10 +14,12 @@ usage:
   jobs:
     sbom:
       executor: security/node
+      environment:
+        TARGET_IMAGE: studiondev/node-security:lts
       steps:
         - checkout
         - security/generate_sbom:
-            image: studiondev/node-security:lts
+            image: ${TARGET_IMAGE}
             format: github-json
             out_path: /tmp/reports/lts-sbom.json
             exclude: /etc /home/**/*.json
