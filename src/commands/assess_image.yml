@@ -15,6 +15,7 @@ parameters:
       The Docker image to scan. Support following schemes
       (1) 'repo-name/image-name:tag' (2) '/path/to/image.tar'. Bases on provided scheme
       it will either use local Docker daemon or tarball archive from disk as a source.
+      Performs environment variable substitution before using the value of this parameter.
   scanners:
     type: string
     default: vuln secret

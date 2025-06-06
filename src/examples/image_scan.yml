@@ -14,10 +14,12 @@ usage:
     vuln-and-secrets:
       machine:
         image: ubuntu-2204:current
+      environment:
+        TARGET_IMAGE: studiondev/node-security:lts
       steps:
         - checkout
         - security/assess_image:
-            image: studiondev/node-security:lts
+            image: ${TARGET_IMAGE}
             severity: medium
             ignore-fix-status: not-fixed,wont-fix
             exclude: /usr /var/**/*.log
