@@ -5,22 +5,15 @@
 # is only observed in CI environment.
 # When the `experimental` flag is set, saving the output to the
 # file will not work and is just silently ignored.
-ARGS="--experimental --error --strict --metrics off"
+ARGS=(--experimental --error --strict --metrics=off)
 BASELINE_COMMIT=""
 
-function join() {
-  local separator="$1"
-  shift
-  local first="$1"
-  shift
-  printf "%s" "${first}" "${@/#/$separator}"
-}
-
-IFS=' ' read -ra RULE_ARRAY <<<"${PARAM_STR_RULES}"
-ARGS="${ARGS} --config $(join ' --config ' "${RULE_ARRAY[@]}")"
+for rule in ${PARAM_STR_RULES}; do
+  ARGS+=("--config=$rule")
+done
 
 if [ "${PARAM_BOOL_VERBOSE}" -eq 1 ]; then
-  ARGS="${ARGS} --verbose"
+  ARGS+=(--verbose)
 fi
 
 if [ "${PARAM_BOOL_FULL_SCAN}" -eq 0 ]; then
@@ -43,9 +36,9 @@ else
 fi
 
 if [[ -n ${BASELINE_COMMIT} ]]; then
-  ARGS="${ARGS} --baseline-commit ${BASELINE_COMMIT}"
+  ARGS+=("--baseline-commit=${BASELINE_COMMIT}")
 fi
 
 set -x
-eval semgrep "${ARGS}"
+semgrep "${ARGS[@]}"
 set +x
