@@ -1,11 +1,11 @@
 #!/bin/bash
 
+ARGS=()
+
+read -ra ARGS <<<"${GITLEAKS_ARGS}"
+
 echo "Starting the directory scan at path '${PWD}'"
 
 set -x
-eval \
-  gitleaks \
-  dir \
-  "${GITLEAKS_ARGS}" \
-  .
+gitleaks dir "${ARGS[@]}" .
 set +x

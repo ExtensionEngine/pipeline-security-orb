@@ -1,6 +1,9 @@
 #!/bin/bash
 
+ARGS=()
 LOG_OPTS=""
+
+read -ra ARGS <<<"${GITLEAKS_ARGS}"
 
 echo "Using '${GIT_BASE_BRANCH}' as the base branch"
 echo "Using '${GIT_CURRENT_BRANCH}' as the current branch"
@@ -29,11 +32,8 @@ else
   LOG_OPTS="${GIT_BASE_BRANCH}..${GIT_CURRENT_BRANCH}"
 fi
 
+ARGS+=("--log-opts=${LOG_OPTS}")
+
 set -x
-eval \
-  gitleaks \
-  git \
-  "${GITLEAKS_ARGS}" \
-  --log-opts="${LOG_OPTS}" \
-  .
+gitleaks git "${ARGS[@]}" .
 set +x
