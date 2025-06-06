@@ -11,5 +11,5 @@ if [[ -n ${CIRCLE_BRANCH} ]]; then
   CURRENT_BRANCH=${CIRCLE_BRANCH}
 fi
 
-echo "export GIT_BASE_BRANCH='${BASE_BRANCH}'" >> "${BASH_ENV}"
-echo "export GIT_CURRENT_BRANCH='${CURRENT_BRANCH}'" >> "${BASH_ENV}"
+echo "export GIT_BASE_BRANCH='${BASE_BRANCH}'" >>"${BASH_ENV}"
+echo "export GIT_CURRENT_BRANCH='${CURRENT_BRANCH}'" >>"${BASH_ENV}"

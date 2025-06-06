@@ -16,7 +16,7 @@ function join() {
   printf "%s" "${first}" "${@/#/$separator}"
 }
 
-IFS=' ' read -ra RULE_ARRAY <<< "${PARAM_STR_RULES}"
+IFS=' ' read -ra RULE_ARRAY <<<"${PARAM_STR_RULES}"
 ARGS="${ARGS} --config $(join ' --config ' "${RULE_ARRAY[@]}")"
 
 if [ "${PARAM_BOOL_VERBOSE}" -eq 1 ]; then

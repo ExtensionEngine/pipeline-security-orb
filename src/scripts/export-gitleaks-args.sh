@@ -10,4 +10,4 @@ if [[ -n "${PARAM_STR_BASELINE_REPORT}" ]]; then
   ARGS="${ARGS} --baseline-path=${PARAM_STR_BASELINE_REPORT}"
 fi
 
-echo "export GITLEAKS_ARGS='${ARGS}'" >> "${BASH_ENV}"
+echo "export GITLEAKS_ARGS='${ARGS}'" >>"${BASH_ENV}"

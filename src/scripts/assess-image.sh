@@ -8,7 +8,7 @@ fi
 
 PARAM_STR_IMAGE=$(circleci env subst "${PARAM_STR_IMAGE}")
 
-function scan_secrets () {
+function scan_secrets() {
   local args=(image "--scanners=secret" "--image-config-scanners=secret")
 
   if [[ "${PARAM_STR_IMAGE}" == *.tar ]]; then
@@ -22,7 +22,7 @@ function scan_secrets () {
   set +x
 }
 
-function scan_vuln () {
+function scan_vuln() {
   local args=()
 
   if [[ "${PARAM_STR_IMAGE}" == *.tar ]]; then
@@ -30,7 +30,7 @@ function scan_vuln () {
   else
     args+=("docker:${PARAM_STR_IMAGE}")
   fi
-  
+
   if [[ -n "${PARAM_STR_IGNORE_FIX_STATUS}" ]]; then
     args+=("--ignore-states=${PARAM_STR_IGNORE_FIX_STATUS}")
   fi
@@ -59,7 +59,7 @@ for scanner in ${PARAM_STR_SCANNERS}; do
   elif [[ $scanner == "secret" ]]; then
     scan_secrets
   else
-    echo "Unknow image scanner: $scanner"
+    echo "Unknown image scanner: $scanner"
     exit 1
   fi
 done

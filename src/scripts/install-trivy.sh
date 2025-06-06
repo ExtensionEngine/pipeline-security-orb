@@ -1,10 +1,10 @@
 #!/bin/bash
 
 BASE_URL="https://raw.githubusercontent.com/aquasecurity/trivy"
-INSTALL_SCRIPT_URL="${BASE_URL}/main/contrib/install.sh" 
+INSTALL_SCRIPT_URL="${BASE_URL}/main/contrib/install.sh"
 TRIVY_DEST_DIR="${TRIVY_DEST_DIR:-/usr/local/bin}"
 
-function install_trivy () {
+function install_trivy() {
   local script_args=(-b "${TRIVY_DEST_DIR}")
 
   if [[ -n "${PARAM_STR_VERSION}" ]]; then
