@@ -1,10 +1,10 @@
 #!/bin/bash
 
 BASE_URL="https://raw.githubusercontent.com/anchore/grype"
-INSTALL_SCRIPT_URL="${BASE_URL}/main/install.sh" 
+INSTALL_SCRIPT_URL="${BASE_URL}/main/install.sh"
 GRYPE_DEST_DIR="${GRYPE_DEST_DIR:-/usr/local/bin}"
 
-function install_grype () {
+function install_grype() {
   local script_args=(-b "${GRYPE_DEST_DIR}")
 
   if [[ -n "${PARAM_STR_VERSION}" ]]; then

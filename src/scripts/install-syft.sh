@@ -1,10 +1,10 @@
 #!/bin/bash
 
 BASE_URL="https://raw.githubusercontent.com/anchore/syft"
-INSTALL_SCRIPT_URL="${BASE_URL}/main/install.sh" 
+INSTALL_SCRIPT_URL="${BASE_URL}/main/install.sh"
 SYFT_DEST_DIR="${SYFT_DEST_DIR:-/usr/local/bin}"
 
-function install_syft () {
+function install_syft() {
   local script_args=(-b "${SYFT_DEST_DIR}")
 
   if [[ -n "${PARAM_STR_VERSION}" ]]; then
