@@ -58,7 +58,7 @@ parameters:
       conforming ot the CycloneDX specification.
   report_path:
     type: string
-    default: /tmp/vuln-report.json
+    default: /tmp/security-orb/output/image-findings.json
     description: Path to the file to write the vulnerability report to.
 
 steps:

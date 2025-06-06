@@ -66,22 +66,20 @@ jobs:
           command: echo "export IMAGE_TO_USE=docker.io/security-sample:v1" >> "${BASH_ENV}"
       - security/generate_sbom:
           image: ${IMAGE_TO_USE}
-          out_path: /tmp/sample-sbom.json
       - run:
           name: Check SBOM output
           command: |
-            if [ ! -f "/tmp/sample-sbom.json" ]; then
+            if [ ! -f "/tmp/security-orb/output/sbom.json" ]; then
               echo "SBOM output not found"
               exit 1
             fi
       - security/assess_image:
           image: ${IMAGE_TO_USE}
           severity: critical
-          report_path: /tmp/sample-vuln-report.json
       - run:
           name: Check vulnerability report
           command: |
-            if [ ! -f "/tmp/sample-vuln-report.json" ]; then
+            if [ ! -f "/tmp/security-orb/output/image-findings.json" ]; then
               echo "Vulnerability report not found"
               exit 1
             fi
