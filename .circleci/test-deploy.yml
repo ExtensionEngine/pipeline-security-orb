@@ -75,7 +75,7 @@ jobs:
               exit 1
             fi
       - security/assess_image:
-          image: docker.io/security-sample:v1
+          image: ${IMAGE_TO_USE}
           severity: critical
           report_path: /tmp/sample-vuln-report.json
       - run:

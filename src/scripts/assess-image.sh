@@ -6,6 +6,7 @@ if [[ -z "${PARAM_STR_IMAGE}" ]]; then
   exit 1
 fi
 
+PARAM_STR_IMAGE=$(circleci env subst "${PARAM_STR_IMAGE}")
 
 function scan_secrets () {
   local args=(image "--scanners=secret" "--image-config-scanners=secret")
