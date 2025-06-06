@@ -27,7 +27,7 @@ parameters:
       conforming to the CycloneDX specification.
   out_path:
     type: string
-    default: /tmp/sbom.json
+    default: /tmp/security-orb/output/sbom.json
     description: Path to the file to write the SBOM report to.
   exclude:
     type: string
