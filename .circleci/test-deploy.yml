@@ -79,7 +79,7 @@ jobs:
       - run:
           name: Check vulnerability report
           command: |
-            if [ ! -f "/tmp/security-orb/output/image-findings.json" ]; then
+            if [ ! -f "/tmp/security-orb/output/image-findings.sarif" ]; then
               echo "Vulnerability report not found"
               exit 1
             fi
