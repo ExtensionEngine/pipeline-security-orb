@@ -16,6 +16,67 @@ release-filters: &release-filters
     only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 jobs:
+  install_gitleaks:
+    executor: core/node
+    steps:
+      - security/install_gitleaks:
+          version: v8.25.1
+      - run:
+          name: Validate installation
+          command: |
+            if ! gitleaks --version | grep -q "8.25.1"; then
+              echo "Failed to install chosen gitleaks version"
+              exit 1
+            fi
+  install_grype:
+    executor: core/node
+    steps:
+      - security/install_grype:
+          version: v0.92.1
+      - run:
+          name: Validate installation
+          command: |
+            if ! grype --version | grep -q "0.92.1"; then
+              echo "Failed to install chosen grype version"
+              exit 1
+            fi
+  install_semgrep:
+    machine:
+      image: ubuntu-2404:current
+    steps:
+      - security/install_semgrep:
+          version: v1.121.0
+      - run:
+          name: Validate installation
+          command: |
+            if ! semgrep --version | grep -q "1.121.0"; then
+              echo "Failed to install chosen semgrep version"
+              exit 1
+            fi
+  install_syft:
+    executor: core/node
+    steps:
+      - security/install_syft:
+          version: v1.25.1
+      - run:
+          name: Validate installation
+          command: |
+            if ! syft --version | grep -q "1.25.1"; then
+              echo "Failed to install chosen syft version"
+              exit 1
+            fi
+  install_trivy:
+    executor: core/node
+    steps:
+      - security/install_trivy:
+          version: v0.59.1
+      - run:
+          name: Validate installation
+          command: |
+            if ! trivy --version | grep -q "0.59.1"; then
+              echo "Failed to install chosen trivy version"
+              exit 1
+            fi
   scan_dependencies_prod_npm:
     executor: core/node
     steps:
@@ -48,7 +109,7 @@ jobs:
       - checkout
       - security/scan_dockerfile:
           dockerfile_dir: ./sample
-  generate_sbom_and_assess_image:
+  assess_image_and_generate_sbom:
     machine:
       image: ubuntu-2404:current
     steps:
@@ -64,15 +125,6 @@ jobs:
       - run:
           name: Export image as env
           command: echo "export IMAGE_TO_USE=docker.io/security-sample:v1" >> "${BASH_ENV}"
-      - security/generate_sbom:
-          image: ${IMAGE_TO_USE}
-      - run:
-          name: Check SBOM output
-          command: |
-            if [ ! -f "/tmp/security-orb/output/sbom.json" ]; then
-              echo "SBOM output not found"
-              exit 1
-            fi
       - security/assess_image:
           image: ${IMAGE_TO_USE}
           severity: critical
@@ -83,85 +135,32 @@ jobs:
               echo "Vulnerability report not found"
               exit 1
             fi
+      - security/generate_sbom:
+          image: ${IMAGE_TO_USE}
+      - run:
+          name: Check SBOM output
+          command: |
+            if [ ! -f "/tmp/security-orb/output/sbom.json" ]; then
+              echo "SBOM output not found"
+              exit 1
+            fi
       - run:
           name: Cleanup
           command: |
-            rm -f /tmp/sample-sbom.json
-            rm -f /tmp/sample-vuln-report.json
-  install_trivy:
-    executor: core/node
-    steps:
-      - security/install_trivy:
-          version: v0.59.1
-      - run:
-          name: Validate installation
-          command: |
-            if ! trivy --version | grep -q "0.59.1"; then
-              echo "Failed to install chosen trivy version"
-              exit 1
-            fi
-  install_syft:
-    executor: core/node
-    steps:
-      - security/install_syft:
-          version: v1.25.1
-      - run:
-          name: Validate installation
-          command: |
-            if ! syft --version | grep -q "1.25.1"; then
-              echo "Failed to install chosen syft version"
-              exit 1
-            fi
-  install_grype:
-    executor: core/node
-    steps:
-      - security/install_grype:
-          version: v0.92.1
-      - run:
-          name: Validate installation
-          command: |
-            if ! grype --version | grep -q "0.92.1"; then
-              echo "Failed to install chosen grype version"
-              exit 1
-            fi
-  install_semgrep:
-    machine:
-      image: ubuntu-2404:current
-    steps:
-      - security/install_semgrep:
-          version: v1.121.0
-      - run:
-          name: Validate installation
-          command: |
-            if ! semgrep --version | grep -q "1.121.0"; then
-              echo "Failed to install chosen semgrep version"
-              exit 1
-            fi
-  install_gitleaks:
-    executor: core/node
-    steps:
-      - security/install_gitleaks:
-          version: v8.25.1
-      - run:
-          name: Validate installation
-          command: |
-            if ! gitleaks --version | grep -q "8.25.1"; then
-              echo "Failed to install chosen gitleaks version"
-              exit 1
-            fi
+            rm -f /tmp/security-orb/output/*
 
 workflows:
   test-deploy:
     jobs:
-      - scan_dependencies_prod_npm:
+      - install_gitleaks:
           filters: *filters
-      - scan_dependencies_prod_pnpm:
+      - install_grype:
           filters: *filters
-      - scan_dependencies_command:
+      - install_semgrep:
           filters: *filters
-      - scan_dockerfile:
+      - install_syft:
           filters: *filters
-      - generate_sbom_and_assess_image:
+      - install_trivy:
           filters: *filters
       - security/detect_secrets_dir:
           name: detect_secrets_dir
@@ -191,15 +190,15 @@ workflows:
           name: analyze_code_full
           rules: p/cwe-top-25
           filters: *filters
-      - install_trivy:
+      - scan_dependencies_prod_npm:
           filters: *filters
-      - install_syft:
+      - scan_dependencies_prod_pnpm:
           filters: *filters
-      - install_grype:
+      - scan_dependencies_command:
           filters: *filters
-      - install_semgrep:
+      - scan_dockerfile:
           filters: *filters
-      - install_gitleaks:
+      - assess_image_and_generate_sbom:
           filters: *filters
       - orb-tools/pack:
           filters: *release-filters
@@ -209,19 +208,19 @@ workflows:
           pub_type: production
           requires:
             - orb-tools/pack
-            - scan_dependencies_prod_npm
-            - scan_dependencies_prod_pnpm
-            - scan_dependencies_command
-            - scan_dockerfile
-            - generate_sbom_and_assess_image
+            - install_gitleaks
+            - install_grype
+            - install_semgrep
+            - install_syft
+            - install_trivy
             - detect_secrets_dir
             - detect_secrets_git_base_revision
             - analyze_code_diff
             - analyze_code_full
-            - install_trivy
-            - install_syft
-            - install_grype
-            - install_semgrep
-            - install_gitleaks
+            - scan_dependencies_prod_npm
+            - scan_dependencies_prod_pnpm
+            - scan_dependencies_command
+            - scan_dockerfile
+            - assess_image_and_generate_sbom
           context: orb-publishing
           filters: *release-filters
