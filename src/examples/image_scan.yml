@@ -13,7 +13,7 @@ usage:
   jobs:
     vuln-and-secrets:
       machine:
-        image: ubuntu-2204:current
+        image: ubuntu-2404:current
       environment:
         TARGET_IMAGE: studiondev/node-security:lts
       steps:
