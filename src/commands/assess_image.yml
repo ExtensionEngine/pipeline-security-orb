@@ -47,18 +47,9 @@ parameters:
     description: >
       Comma delimited list of matches to ignore based on the vulnerability fix status.
       Available options - 'fixed', 'not-fixed', 'wont-fix', 'unknown'.
-  report_format:
-    type: enum
-    enum:
-      - cyclonedx-json
-      - json
-    default: cyclonedx-json
-    description: >
-      Choose the format of the vulnerability report. By default, a JSON format
-      conforming ot the CycloneDX specification.
-  report_path:
+  out_vuln_path:
     type: string
-    default: /tmp/security-orb/output/image-findings.json
+    default: /tmp/security-orb/output/image-findings.sarif
     description: Path to the file to write the vulnerability report to.
 
 steps:
@@ -69,6 +60,5 @@ steps:
         PARAM_STR_SCANNERS: <<parameters.scanners>>
         PARAM_ENUM_SEVERITY: <<parameters.severity>>
         PARAM_STR_IGNORE_FIX_STATUS: <<parameters.ignore_fix_status>>
-        PARAM_ENUM_REPORT_FORMAT: <<parameters.report_format>>
-        PARAM_STR_REPORT_PATH: <<parameters.report_path>>
+        PARAM_STR_OUT_VULN_PATH: <<parameters.out_vuln_path>>
       command: <<include(scripts/assess-image.sh)>>

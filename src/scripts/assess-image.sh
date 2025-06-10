@@ -44,8 +44,8 @@ function scan_vuln() {
   fi
 
   args+=(--by-cve "--fail-on=${PARAM_ENUM_SEVERITY}")
-  args+=("--output=${PARAM_ENUM_REPORT_FORMAT}")
-  args+=("--file=${PARAM_STR_REPORT_PATH}")
+  args+=("--output=sarif")
+  args+=("--file=${PARAM_STR_OUT_VULN_PATH}")
 
   set -x
   grype "${args[@]}"
