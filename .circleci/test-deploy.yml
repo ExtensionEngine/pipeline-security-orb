@@ -50,7 +50,7 @@ jobs:
           dockerfile_dir: ./sample
   generate_sbom_and_assess_image:
     machine:
-      image: ubuntu-2204:current
+      image: ubuntu-2404:current
     steps:
       - checkout
       - security/install_grype
