@@ -45,3 +45,6 @@ steps:
         PARAM_STR_OUT_PATH: <<parameters.out_path>>
         PARAM_STR_EXCLUDE: <<parameters.exclude>>
       command: <<include(scripts/generate-sbom.sh)>>
+  - store_artifacts:
+      path: <<parameters.out_path>>
+      destination: security-orb/sbom
