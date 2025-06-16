@@ -4,6 +4,11 @@ description: >
 executor: node
 
 parameters:
+  root_dir:
+    type: string
+    default: "."
+    description: >
+      The root of the codebase to analyze. Defaults to . (working directory).
   verbose:
     type: boolean
     default: false
@@ -19,5 +24,6 @@ steps:
   - checkout
   - analyze_code:
       full_scan: true
+      root_dir: <<parameters.root_dir>>
       verbose: <<parameters.verbose>>
       rules: <<parameters.rules>>

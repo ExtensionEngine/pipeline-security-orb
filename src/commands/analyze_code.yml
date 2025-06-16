@@ -3,6 +3,12 @@ description: >
   command to do the analysis. For details on usage see https://semgrep.dev/docs/cli-reference.
 
 parameters:
+  root_dir:
+    type: string
+    default: "."
+    description: >
+      The root of the codebase to analyze. Defaults to . (working directory).
+      Complements the full scan mode, by enabling partial scan of the codebase.
   full_scan:
     type: boolean
     default: false
@@ -21,7 +27,7 @@ parameters:
       file, or Semgrep registry entry name.
   base_branch:
     type: string
-    default: ''
+    default: ""
     description: >
       The name of the base branch for this scan. Commonly a long-lived branch, e.g. "main" or "master".
 
@@ -36,6 +42,7 @@ steps:
             command: <<include(scripts/export-git-branches.sh)>>
   - run:
       name: Analyze code <<#parameters.full_scan>>full<</parameters.full_scan>><<^parameters.full_scan>>diff<</parameters.full_scan>>
+      working_directory: <<parameters.root_dir>>
       environment:
         PARAM_BOOL_FULL_SCAN: <<parameters.full_scan>>
         PARAM_BOOL_VERBOSE: <<parameters.verbose>>
