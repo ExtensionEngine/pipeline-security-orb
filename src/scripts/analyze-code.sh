@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Starting codebase analysis at root directory: ${PWD}"
+
 # The `experimental` flag is needed for Semgrep to work, otherwise
 # for unknown reason it will fail with exit code 2. This behavior
 # is only observed in CI environment.

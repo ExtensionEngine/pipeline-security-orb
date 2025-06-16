@@ -188,6 +188,7 @@ workflows:
           filters: *filters
       - security/analyze_code_full:
           name: analyze_code_full
+          root_dir: ./sample
           rules: p/cwe-top-25
           filters: *filters
       - scan_dependencies_prod_npm:
